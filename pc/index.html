@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Happy Birthday Planet</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        --bg: rgb(152, 67, 67);
+        --bg-deep: rgba(45, 8, 8, 0.88);
+        --line: rgba(255, 244, 244, 0.18);
+        --soft: rgba(255, 236, 236, 0.78);
+        --strong: rgba(255, 250, 250, 0.98);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.06), transparent 28%),
+          radial-gradient(circle at 80% 0%, rgba(255, 202, 202, 0.1), transparent 32%),
+          linear-gradient(180deg, rgba(68, 16, 16, 0.42), rgba(38, 5, 5, 0.82)),
+          var(--bg);
+        color: var(--strong);
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        scroll-snap-type: y mandatory;
+      }
+
+      #scene {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 0;
+      }
+
+      .grain {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.18;
+        background-image:
+          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.09) 0, transparent 32%),
+          radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.05) 0, transparent 24%),
+          radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.08) 0, transparent 30%);
+        mix-blend-mode: screen;
+      }
+
+      #input-video {
+        position: fixed;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      main {
+        position: relative;
+        z-index: 2;
+        min-height: 100svh;
+      }
+
+      .section {
+        position: relative;
+        min-height: 100svh;
+        padding: clamp(1.5rem, 4vw, 3rem);
+        overflow: hidden;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.56;
+        background-repeat: no-repeat;
+        animation: twinkle 9s ease-in-out infinite alternate;
+      }
+
+      .section > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero::before {
+        background-image:
+          radial-gradient(circle at 10% 18%, rgba(255, 255, 255, 0.92) 0 1px, transparent 2px),
+          radial-gradient(circle at 23% 30%, rgba(255, 255, 255, 0.78) 0 1.2px, transparent 2.2px),
+          radial-gradient(circle at 38% 17%, rgba(255, 255, 255, 0.9) 0 1.1px, transparent 2.1px),
+          radial-gradient(circle at 68% 12%, rgba(255, 255, 255, 0.72) 0 1px, transparent 2px),
+          radial-gradient(circle at 82% 24%, rgba(255, 255, 255, 0.84) 0 1.3px, transparent 2.3px),
+          radial-gradient(circle at 91% 16%, rgba(255, 255, 255, 0.78) 0 1px, transparent 2px),
+          radial-gradient(circle at 74% 32%, rgba(255, 255, 255, 0.7) 0 0.9px, transparent 1.8px);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(0, 0, 0, 0) 38%, rgba(32, 0, 0, 0.12) 70%, rgba(28, 0, 0, 0.3) 100%);
+        z-index: -1;
+      }
+
+      .story::before {
+        background-image:
+          radial-gradient(circle at 9% 15%, rgba(255, 255, 255, 0.88) 0 1.1px, transparent 2.2px),
+          radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.72) 0 1px, transparent 2px),
+          radial-gradient(circle at 47% 11%, rgba(255, 255, 255, 0.9) 0 1.25px, transparent 2.4px),
+          radial-gradient(circle at 66% 19%, rgba(255, 255, 255, 0.74) 0 1px, transparent 2px),
+          radial-gradient(circle at 83% 14%, rgba(255, 255, 255, 0.86) 0 1.2px, transparent 2.2px),
+          radial-gradient(circle at 94% 24%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+          radial-gradient(circle at 71% 31%, rgba(255, 255, 255, 0.6) 0 0.9px, transparent 1.8px),
+          radial-gradient(circle at 16% 36%, rgba(255, 255, 255, 0.58) 0 0.85px, transparent 1.7px);
+      }
+
+      .finale::before {
+        background-image:
+          radial-gradient(circle at 9% 15%, rgba(255, 255, 255, 0.88) 0 1.1px, transparent 2.2px),
+          radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.72) 0 1px, transparent 2px),
+          radial-gradient(circle at 47% 11%, rgba(255, 255, 255, 0.9) 0 1.25px, transparent 2.4px),
+          radial-gradient(circle at 66% 19%, rgba(255, 255, 255, 0.74) 0 1px, transparent 2px),
+          radial-gradient(circle at 83% 14%, rgba(255, 255, 255, 0.86) 0 1.2px, transparent 2.2px),
+          radial-gradient(circle at 94% 24%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+          radial-gradient(circle at 71% 31%, rgba(255, 255, 255, 0.6) 0 0.9px, transparent 1.8px),
+          radial-gradient(circle at 16% 36%, rgba(255, 255, 255, 0.58) 0 0.85px, transparent 1.7px);
+      }
+
+      .story {
+        display: grid;
+        align-items: end;
+        padding-top: clamp(6rem, 14vh, 10rem);
+        padding-bottom: clamp(2rem, 6vh, 4.25rem);
+      }
+
+      .story-shell {
+        width: min(80rem, 100%);
+        margin: 0 auto clamp(5rem, 12vh, 7.4rem);
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(21rem, 0.92fr);
+        gap: clamp(1.15rem, 2.5vw, 1.8rem);
+        align-items: stretch;
+      }
+
+      .glass-panel {
+        position: relative;
+        min-height: clamp(24.5rem, 58svh, 35rem);
+        padding: clamp(1.1rem, 2.5vw, 1.5rem);
+        border-radius: 2rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background:
+          linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow:
+          0 30px 90px rgba(17, 1, 1, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(30px) saturate(165%);
+        -webkit-backdrop-filter: blur(30px) saturate(165%);
+      }
+
+      .glass-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.18), transparent 38%),
+          radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.08), transparent 34%);
+        pointer-events: none;
+      }
+
+      .glass-panel::after {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: calc(2rem - 1px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+      }
+
+      .glass-panel > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .glass-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.95rem;
+      }
+
+      .glass-kicker {
+        display: flex;
+        flex-direction: column;
+        gap: 0.28rem;
+      }
+
+      .glass-kicker span:first-child {
+        font-size: 0.74rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 238, 238, 0.6);
+      }
+
+      .glass-kicker span:last-child {
+        font-size: clamp(1.02rem, 1.55vw, 1.18rem);
+        letter-spacing: 0.02em;
+        color: rgba(255, 250, 250, 0.96);
+      }
+
+      .glass-status {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.46rem;
+        min-height: 2.2rem;
+        padding: 0.55rem 0.82rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 248, 248, 0.86);
+        font-size: 0.82rem;
+        letter-spacing: 0.02em;
+      }
+
+      .glass-status::before {
+        content: "";
+        width: 0.52rem;
+        height: 0.52rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.48);
+        box-shadow: 0 0 0.8rem rgba(255, 255, 255, 0.18);
+        transition: background-color 220ms ease, box-shadow 220ms ease;
+      }
+
+      .glass-status[data-state="ready"]::before {
+        background: rgba(183, 255, 211, 0.96);
+        box-shadow: 0 0 1rem rgba(183, 255, 211, 0.45);
+      }
+
+      .glass-status[data-state="active"]::before {
+        background: rgba(255, 240, 170, 0.98);
+        box-shadow: 0 0 1rem rgba(255, 240, 170, 0.5);
+      }
+
+      .glass-status[data-state="error"]::before {
+        background: rgba(255, 187, 187, 0.96);
+        box-shadow: 0 0 1rem rgba(255, 187, 187, 0.4);
+      }
+
+      .glass-camera-wrap {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 20.5rem;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 22%, rgba(255, 255, 255, 0.12), transparent 34%),
+          rgba(18, 5, 5, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .story-camera {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        background: rgba(13, 2, 2, 0.56);
+      }
+
+      .glass-camera-overlay,
+      .glass-camera-placeholder,
+      .glass-camera-label {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .glass-camera-overlay {
+        background:
+          linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.22)),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: auto, 2.65rem 2.65rem, 2.65rem 2.65rem;
+      }
+
+      .glass-camera-placeholder {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 2rem;
+        color: rgba(255, 244, 244, 0.64);
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      .glass-camera-label {
+        inset: auto auto 1rem 1rem;
+        display: inline-flex;
+        width: auto;
+        height: auto;
+        padding: 0.6rem 0.82rem;
+        border-radius: 999px;
+        background: rgba(14, 0, 0, 0.28);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 249, 249, 0.88);
+        font-size: 0.8rem;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+
+      .glass-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.8rem 1rem;
+        margin-top: 1rem;
+        color: rgba(255, 236, 236, 0.72);
+        font-size: 0.86rem;
+        letter-spacing: 0.02em;
+      }
+
+      .glass-log-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-height: calc(100% - 3.4rem);
+      }
+
+      .timeline-current {
+        padding: 0.9rem 1rem;
+        border-radius: 1.3rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .timeline-log {
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: 0.4rem 0.08rem 0.3rem;
+        overflow: auto;
+      }
+
+      .timeline-log::-webkit-scrollbar {
+        width: 0.5rem;
+      }
+
+      .timeline-log::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+      }
+
+      .timeline-item,
+      .timeline-empty {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.7rem 0.9rem;
+        align-items: start;
+        padding: 0.9rem 0.95rem;
+        border-radius: 1.25rem;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .timeline-item + .timeline-item,
+      .timeline-item + .timeline-empty,
+      .timeline-empty + .timeline-item {
+        margin-top: 0.7rem;
+      }
+
+      .timeline-empty {
+        grid-template-columns: 1fr;
+        color: rgba(255, 240, 240, 0.55);
+      }
+
+      .timeline-dot {
+        width: 0.62rem;
+        height: 0.62rem;
+        margin-top: 0.34rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.85);
+        box-shadow: 0 0 1rem rgba(255, 255, 255, 0.35);
+      }
+
+      .timeline-item strong {
+        display: block;
+        color: rgba(255, 249, 249, 0.94);
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      .timeline-item span {
+        display: block;
+        margin-top: 0.25rem;
+        color: rgba(255, 232, 232, 0.66);
+        font-size: 0.8rem;
+        line-height: 1.45;
+      }
+
+      .story-copy {
+        position: absolute;
+        left: clamp(1.6rem, 4vw, 3.2rem);
+        bottom: clamp(1.3rem, 4vh, 2.3rem);
+        max-width: min(24rem, 54vw);
+        font-weight: 700;
+        font-style: normal;
+        line-height: 1.12;
+        letter-spacing: 0.02em;
+        color: rgba(255, 251, 251, 0.96);
+        text-align: left;
+        text-shadow: 0 0 1.6rem rgba(255, 255, 255, 0.08);
+      }
+
+      .story-copy span {
+        display: block;
+        font-size: clamp(1.42rem, 2.8vw, 2.5rem);
+      }
+
+      .story-copy .story-copy-cn {
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          "Heiti SC", sans-serif;
+        font-size: clamp(1.12rem, 2.2vw, 1.9rem);
+        opacity: 0.6;
+      }
+
+      .story-copy .story-copy-time {
+        margin-top: 0.26rem;
+        font-family: "Times New Roman", Times, serif;
+        letter-spacing: 0.08em;
+      }
+
+      .story-login-tag {
+        position: absolute;
+        top: clamp(1.5rem, 4vh, 2.5rem);
+        right: clamp(1.5rem, 4vw, 3rem);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.46rem;
+        font-size: 0.88rem;
+        letter-spacing: 0.04em;
+        z-index: 2;
+      }
+
+      .story-login-tag::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: #7dffb2;
+        box-shadow: 0 0 0.9rem rgba(125, 255, 178, 0.5);
+      }
+
+      .story-login-tag .story-login-cn {
+        color: rgba(255, 252, 252, 0.96);
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          "Heiti SC", sans-serif;
+      }
+
+      .story-login-tag .story-login-en {
+        color: #7dffb2;
+        font-family: "Times New Roman", Times, serif;
+      }
+
+      .finale::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.92;
+        background:
+          radial-gradient(circle at 18% 16%, rgba(184, 31, 51, 0.22), transparent 28%),
+          radial-gradient(circle at 82% 14%, rgba(242, 193, 143, 0.16), transparent 26%),
+          radial-gradient(circle at 50% 72%, rgba(85, 23, 36, 0.22), transparent 34%),
+          linear-gradient(180deg, rgba(9, 11, 16, 0.78) 0%, rgba(5, 6, 10, 0.5) 45%, rgba(7, 7, 13, 0.74) 100%);
+      }
+
+      .finale-stage-copy,
+      .finale-stage-hint,
+      .finale-camera-shell {
+        position: absolute;
+      }
+
+      .finale-stage-copy,
+      .finale-stage-hint {
+        z-index: 4;
+      }
+
+      .finale-stage-copy {
+        top: clamp(1.8rem, 5vh, 3.3rem);
+        left: clamp(1.6rem, 4vw, 3.2rem);
+        max-width: min(26rem, 46vw);
+        color: rgba(255, 250, 250, 0.96);
+      }
+
+      .finale-stage-line {
+        margin: 0;
+        opacity: 0;
+        transform: translateY(0.8rem);
+        transition: opacity 360ms ease, transform 360ms ease;
+        font-family: "STZhongsong", "华文中宋", "Songti SC", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", "Heiti SC", serif;
+        font-size: clamp(1.7rem, 3.5vw, 3.1rem);
+        font-weight: 800;
+        line-height: 1.5;
+        letter-spacing: 0.03em;
+        text-shadow: 0 0 2rem rgba(255, 255, 255, 0.08);
+      }
+
+      .finale-stage-line + .finale-stage-line {
+        margin-top: 0.62rem;
+      }
+
+      .finale-stage-line.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .finale-stage-line.is-script {
+        font-family: "Snell Roundhand", "Apple Chancery", "Zapfino", "Times New Roman", cursive;
+        font-size: clamp(2.5rem, 5vw, 4.8rem);
+        font-weight: 400;
+        letter-spacing: 0.04em;
+      }
+
+      .finale-stage-hint {
+        top: clamp(1.6rem, 4vh, 2.8rem);
+        right: clamp(1.5rem, 4vw, 3rem);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.76rem;
+        letter-spacing: 0.05em;
+        color: rgba(255, 246, 246, 0.74);
+        text-align: right;
+      }
+
+      .finale-stage-hint::before {
+        content: "";
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.84);
+        box-shadow: 0 0 0.8rem rgba(255, 255, 255, 0.4);
+      }
+
+      .finale-camera-shell {
+        z-index: 2;
+        right: clamp(1.3rem, 3vw, 2.2rem);
+        bottom: clamp(1.2rem, 3vh, 2rem);
+        width: min(20rem, 30vw);
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        border-radius: 1.35rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(8, 10, 16, 0.32);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+      }
+
+      .finale-camera {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        background: rgba(9, 10, 16, 0.52);
+      }
+
+      .finale-camera-placeholder {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        text-align: center;
+        color: rgba(255, 247, 247, 0.58);
+        font-size: 0.78rem;
+        letter-spacing: 0.03em;
+        background:
+          linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.24)),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: auto, 2.4rem 2.4rem, 2.4rem 2.4rem;
+      }
+
+      .finale-effects {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .hero-footer-shell {
+        position: absolute;
+        left: clamp(1.5rem, 4vw, 3rem);
+        bottom: clamp(1.25rem, 4vh, 2.5rem);
+        width: min(32rem, calc(100vw - 3rem));
+      }
+
+      .hero-note-top,
+      .hero-note-bottom {
+        position: absolute;
+        right: clamp(1.5rem, 4vw, 3rem);
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          "Heiti SC", sans-serif;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-align: right;
+      }
+
+      .hero-note-top {
+        top: clamp(1.5rem, 4vh, 2.8rem);
+        font-size: clamp(1.2rem, 1.8vw, 1.48rem);
+        color: rgba(255, 252, 252, 0.96);
+      }
+
+      .hero-note-bottom {
+        bottom: clamp(5.1rem, 11vh, 7.8rem);
+        max-width: min(28rem, 46vw);
+        font-size: clamp(1.85rem, 3.7vw, 3rem);
+        line-height: 1.12;
+        font-style: italic;
+      }
+
+      .hero-note-bottom span {
+        display: block;
+        color: rgba(255, 255, 255, 0.1);
+      }
+
+      .hero-note-bottom .hero-note-bottom-muted {
+        color: rgba(255, 255, 255, 0.2);
+      }
+
+      .hero-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 1.5rem;
+        color: rgba(255, 234, 234, 0.76);
+        font-size: 0.92rem;
+        letter-spacing: 0.02em;
+      }
+
+      .signal,
+      .time-readout {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .signal::before {
+        content: "";
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.84);
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
+      }
+
+      .time-readout::before {
+        content: "—";
+        opacity: 0.6;
+      }
+
+      .birthday-overlay {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .birthday-overlay span {
+        max-width: min(92vw, 14ch);
+        font-family: "Times New Roman", Times, serif;
+        font-size: clamp(3.2rem, 11vw, 8.4rem);
+        line-height: 0.88;
+        letter-spacing: 0.04em;
+        text-align: center;
+        color: rgba(255, 252, 252, 0.98);
+        text-transform: lowercase;
+        text-shadow:
+          0 0 24px rgba(255, 255, 255, 0.22),
+          0 0 80px rgba(255, 240, 240, 0.2);
+        opacity: var(--text-opacity, 0);
+        transform: translateY(var(--text-shift, 28px)) scale(var(--text-scale, 1.06));
+        filter: blur(var(--text-blur, 14px));
+        transition: opacity 120ms linear, transform 120ms linear, filter 120ms linear;
+      }
+
+      .campus-overlay {
+        position: absolute;
+        inset: auto 0 0;
+        width: 100%;
+        height: min(54svh, 30rem);
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0;
+        display: block;
+        mix-blend-mode: screen;
+        transition: opacity 420ms ease;
+      }
+
+      @keyframes twinkle {
+        0% {
+          opacity: 0.38;
+          transform: translateY(0);
+        }
+
+        100% {
+          opacity: 0.68;
+          transform: translateY(-6px);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .story {
+          padding-top: 5rem;
+        }
+
+        .story-shell {
+          grid-template-columns: 1fr;
+          margin-bottom: 5.7rem;
+        }
+
+        .glass-panel {
+          min-height: 22rem;
+          border-radius: 1.6rem;
+        }
+
+        .glass-camera-wrap {
+          min-height: 15.2rem;
+        }
+
+        .story-copy {
+          max-width: min(17rem, 78vw);
+          bottom: 1rem;
+        }
+
+        .story-login-tag {
+          font-size: 0.74rem;
+        }
+
+        .finale-stage-copy {
+          max-width: min(15rem, 70vw);
+        }
+
+        .finale-stage-line {
+          font-size: clamp(1.4rem, 6vw, 2rem);
+        }
+
+        .finale-stage-line.is-script {
+          font-size: clamp(2rem, 9vw, 3rem);
+        }
+
+        .finale-stage-hint {
+          max-width: 10rem;
+          font-size: 0.68rem;
+        }
+
+        .finale-camera-shell {
+          width: min(13rem, 45vw);
+        }
+
+        .hero-footer-shell {
+          bottom: 1rem;
+        }
+
+        .hero-footer {
+          gap: 0.7rem 1rem;
+          font-size: 0.86rem;
+        }
+
+        .hero-note-top {
+          font-size: 1.05rem;
+        }
+
+        .hero-note-bottom {
+          max-width: min(18rem, 60vw);
+          font-size: 1.42rem;
+          bottom: 4.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <video id="input-video" playsinline muted></video>
+
+    <main id="scroller">
+      <section class="section hero">
+        <div class="hero-note-top">• 祝孙一豪生日快乐！</div>
+        <div class="hero-note-bottom">
+          <span>“只有珍惜时间</span>
+          <span>踔厉奋发之人</span>
+          <span>才能享有真正的</span>
+          <span class="hero-note-bottom-muted">无上荣光”</span>
+        </div>
+        <div class="hero-footer-shell">
+          <div class="hero-footer">
+            <span class="signal">camera-centered orbit</span>
+            <span class="time-readout" id="live-time">00:00:00</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section story">
+        <div class="story-login-tag" aria-hidden="true">
+          <span class="story-login-cn">时间之神</span>
+          <span class="story-login-en">login</span>
+        </div>
+
+        <div class="story-shell">
+          <div class="glass-panel">
+            <div class="glass-header">
+              <div class="glass-kicker">
+                <span>camera feed</span>
+                <span>握拳检测画面</span>
+              </div>
+              <div class="glass-status" id="fist-status-chip" data-state="loading">
+                等待摄像头
+              </div>
+            </div>
+            <div class="glass-camera-wrap">
+              <video
+                class="story-camera"
+                id="story-camera"
+                playsinline
+                muted
+              ></video>
+              <div class="glass-camera-overlay" aria-hidden="true"></div>
+              <div
+                class="glass-camera-placeholder"
+                id="story-camera-placeholder"
+              >
+                允许摄像头权限后，这里会显示实时画面并检测握拳动作
+              </div>
+              <div class="glass-camera-label" id="story-camera-label">
+                hand scan idle
+              </div>
+            </div>
+            <div class="glass-footer">
+              <span class="signal">time accumulated:</span>
+              <span class="time-readout" id="fist-accumulated">00:00:00</span>
+            </div>
+          </div>
+
+          <div class="glass-panel">
+            <div class="glass-header">
+              <div class="glass-kicker">
+                <span>timeline archive</span>
+                <span>握拳时间记录</span>
+              </div>
+            </div>
+            <div class="glass-log-shell">
+              <div class="glass-footer timeline-current">
+                <span class="signal">latest fist start</span>
+                <span class="time-readout" id="fist-latest-time">--:--:--</span>
+              </div>
+              <div class="timeline-log" id="fist-log">
+                <div class="timeline-empty">
+                  首次检测到握拳后，会在这里记录开始时间。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-copy">
+          <span class="story-copy-cn">“那些被删除的时间</span>
+          <span class="story-copy-cn">都去了哪里”</span>
+          <span class="story-copy-time" id="story-accumulated-display">00：00：00</span>
+        </div>
+      </section>
+
+      <section class="section finale">
+        <canvas class="campus-overlay" id="campus-overlay" aria-hidden="true"></canvas>
+        <canvas class="finale-effects" id="finale-effects" aria-hidden="true"></canvas>
+        <div class="finale-stage-copy">
+          <p class="finale-stage-line" data-stage-line="0">当你想当之人</p>
+          <p class="finale-stage-line" data-stage-line="1">做你想做之事</p>
+          <p class="finale-stage-line" data-stage-line="2">享你应得之荣光</p>
+          <p class="finale-stage-line is-script" data-stage-line="3">Joyeux Anniversaire</p>
+        </div>
+        <div class="finale-stage-hint" id="finale-stage-hint">
+          依次比出 3 → 2 → 1，最后收拳
+        </div>
+        <div class="finale-camera-shell">
+          <video
+            class="finale-camera"
+            id="finale-camera"
+            playsinline
+            muted
+          ></video>
+          <div class="finale-camera-placeholder" id="finale-camera-placeholder">
+            第三页会在这里显示手势识别画面
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="birthday-overlay" id="birthday-overlay" aria-hidden="true">
+      <span>happy<br />birthday</span>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./campus-data.js"></script>
+    <script type="module">
+      import * as THREE from "https://unpkg.com/three@0.164.1/build/three.module.js";
+
+      const canvas = document.getElementById("scene");
+      const inputVideo = document.getElementById("input-video");
+      const heroSection = document.querySelector(".hero");
+      const storySection = document.querySelector(".story");
+      const finaleSection = document.querySelector(".finale");
+      const campusOverlay = document.getElementById("campus-overlay");
+      const birthdayOverlay = document.getElementById("birthday-overlay");
+      const liveTime = document.getElementById("live-time");
+      const storyCamera = document.getElementById("story-camera");
+      const storyCameraPlaceholder = document.getElementById("story-camera-placeholder");
+      const storyCameraLabel = document.getElementById("story-camera-label");
+      const fistStatusChip = document.getElementById("fist-status-chip");
+      const fistAccumulated = document.getElementById("fist-accumulated");
+      const fistLatestTime = document.getElementById("fist-latest-time");
+      const fistLog = document.getElementById("fist-log");
+      const storyAccumulatedDisplay = document.getElementById("story-accumulated-display");
+      const finaleCamera = document.getElementById("finale-camera");
+      const finaleCameraPlaceholder = document.getElementById("finale-camera-placeholder");
+      const finaleEffectsCanvas = document.getElementById("finale-effects");
+      const finaleStageLines = Array.from(document.querySelectorAll("[data-stage-line]"));
+      const finaleStageHint = document.getElementById("finale-stage-hint");
+
+      birthdayOverlay.style.display = "none";
+      window.alert = () => {};
+
+      function formatClock(date = new Date()) {
+        return new Intl.DateTimeFormat("zh-CN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }).format(date);
+      }
+
+      function updateClock() {
+        liveTime.textContent = formatClock();
+      }
+
+      updateClock();
+      setInterval(updateClock, 250);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.18;
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x984343, 0.038);
+
+      const camera = new THREE.PerspectiveCamera(
+        42,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        120
+      );
+      const target = new THREE.Vector3(0, 0, 0);
+
+      const tempForward = new THREE.Vector3();
+      const tempRight = new THREE.Vector3();
+      const tempUp = new THREE.Vector3();
+
+      let cameraRadius = 14.4;
+      let cameraAzimuth = 0.36;
+      let cameraElevation = 0.22;
+      const defaultCameraRadius = 14.4;
+      const minCameraRadius = 8.1;
+      const maxCameraRadius = 31.5;
+      let orbitVelocity = 0;
+      let zoomOutVelocity = 0;
+      let morphProgress = 0;
+      let morphHold = 0;
+      let heroVisibility = 1;
+      let storyVisibility = 0;
+      let finaleVisibility = 0;
+      let emblemReveal = 0;
+      let campusReveal = 0;
+      let interactionEnabled = true;
+
+      const gesture = {
+        hasHand: false,
+        isOpen: false,
+        isFist: false,
+        openNear: false,
+        fistFar: false,
+        nonThumbCount: 0,
+        fingerCount: 0,
+        neutralSize: 0.22,
+        smoothSize: 0.22,
+        palmAngle: null,
+      };
+
+      const fistTimer = {
+        accumulatedMs: 0,
+        startedAt: 0,
+        running: false,
+        detectedFrames: 0,
+        releasedFrames: 0,
+        lastTransitionAt: 0,
+        transitionGuardMs: 220,
+      };
+
+      const finaleSequence = {
+        expected: ["3", "2", "1", "fist"],
+        index: 0,
+        holdFrames: 0,
+        complete: false,
+        currentSymbol: null,
+        effectPhase: "idle",
+        phaseStartedAt: 0,
+        lastBurstAt: 0,
+        fireworks: [],
+        emblemParticles: [],
+      };
+
+      const finaleEffects = {
+        context: finaleEffectsCanvas.getContext("2d"),
+        width: 1,
+        height: 1,
+        dpr: 1,
+      };
+
+      function setFistStatus(text, state = "loading") {
+        fistStatusChip.textContent = text;
+        fistStatusChip.dataset.state = state;
+      }
+
+      function resizeFinaleEffectsCanvas() {
+        const rect = finaleSection.getBoundingClientRect();
+        const width = Math.max(1, Math.round(rect.width));
+        const height = Math.max(1, Math.round(rect.height));
+        const dpr = Math.min(window.devicePixelRatio, 2);
+        finaleEffectsCanvas.width = Math.round(width * dpr);
+        finaleEffectsCanvas.height = Math.round(height * dpr);
+        finaleEffects.context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        finaleEffects.width = width;
+        finaleEffects.height = height;
+        finaleEffects.dpr = dpr;
+      }
+
+      function syncCameraFeeds() {
+        if (!inputVideo.srcObject) {
+          return;
+        }
+
+        if (storyCamera.srcObject !== inputVideo.srcObject) {
+          storyCamera.srcObject = inputVideo.srcObject;
+          storyCamera.muted = true;
+          storyCamera.play().catch(() => {});
+          storyCameraPlaceholder.style.display = "none";
+          storyCameraLabel.textContent = "hand scan online";
+          setFistStatus("等待握拳", "ready");
+        }
+
+        if (finaleCamera.srcObject !== inputVideo.srcObject) {
+          finaleCamera.srcObject = inputVideo.srcObject;
+          finaleCamera.muted = true;
+          finaleCamera.play().catch(() => {});
+          finaleCameraPlaceholder.style.display = "none";
+        }
+      }
+
+      function createTimelineItem(stamp, detail) {
+        const item = document.createElement("div");
+        item.className = "timeline-item";
+
+        const dot = document.createElement("div");
+        dot.className = "timeline-dot";
+        item.appendChild(dot);
+
+        const content = document.createElement("div");
+        const title = document.createElement("strong");
+        title.textContent = stamp;
+        const meta = document.createElement("span");
+        meta.textContent = detail;
+        content.append(title, meta);
+        item.appendChild(content);
+
+        return item;
+      }
+
+      function logFistStart(stamp, detail) {
+        const empty = fistLog.querySelector(".timeline-empty");
+        if (empty) {
+          empty.remove();
+        }
+
+        fistLog.prepend(createTimelineItem(stamp, detail));
+
+        while (fistLog.children.length > 6) {
+          fistLog.removeChild(fistLog.lastElementChild);
+        }
+      }
+
+      function currentAccumulatedMs(nowMs) {
+        return fistTimer.accumulatedMs + (fistTimer.running ? nowMs - fistTimer.startedAt : 0);
+      }
+
+      function formatAccumulatedDisplay(ms) {
+        const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(hours).padStart(2, "0")}：${String(minutes).padStart(2, "0")}：${String(seconds).padStart(2, "0")}`;
+      }
+
+      function formatAccumulatedPanel(ms) {
+        const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function refreshFistUi(nowMs) {
+        const totalMs = currentAccumulatedMs(nowMs);
+        storyAccumulatedDisplay.textContent = formatAccumulatedDisplay(totalMs);
+        fistAccumulated.textContent = formatAccumulatedPanel(totalMs);
+
+        if (!inputVideo.srcObject) {
+          setFistStatus("等待摄像头", "loading");
+          storyCameraLabel.textContent = "camera offline";
+          finaleCameraPlaceholder.style.display = "";
+          return;
+        }
+
+        if (fistTimer.running) {
+          setFistStatus("收集时间开始", "active");
+          storyCameraLabel.textContent = "fist detected";
+          return;
+        }
+
+        if (totalMs > 0) {
+          setFistStatus("计时暂停", "ready");
+          storyCameraLabel.textContent = gesture.hasHand ? "ready to resume" : "timer paused";
+          return;
+        }
+
+        setFistStatus("等待握拳", "ready");
+        storyCameraLabel.textContent = gesture.hasHand ? "hand detected" : "hand scan online";
+      }
+
+      function resetFinaleSequence() {
+        finaleSequence.index = 0;
+        finaleSequence.holdFrames = 0;
+        finaleSequence.complete = false;
+        finaleSequence.currentSymbol = null;
+        finaleSequence.effectPhase = "idle";
+        finaleSequence.phaseStartedAt = 0;
+        finaleSequence.lastBurstAt = 0;
+        finaleSequence.fireworks = [];
+        finaleSequence.emblemParticles = [];
+      }
+
+      function detectFinaleSymbol() {
+        if (!gesture.hasHand) {
+          return null;
+        }
+
+        if (gesture.isFist) {
+          return "fist";
+        }
+
+        if (gesture.nonThumbCount === 3) {
+          return "3";
+        }
+
+        if (gesture.nonThumbCount === 2) {
+          return "2";
+        }
+
+        if (gesture.nonThumbCount === 1) {
+          return "1";
+        }
+
+        return null;
+      }
+
+      function updateFinaleStage() {
+        for (let i = 0; i < finaleStageLines.length; i += 1) {
+          finaleStageLines[i].classList.toggle("is-visible", i < finaleSequence.index);
+        }
+      }
+
+      function extractEmblemSeeds(localPoints, maxPoints = 960) {
+        const total = localPoints.length / 3;
+        const stride = Math.max(1, Math.floor(total / maxPoints));
+        const seeds = [];
+        let minX = Number.POSITIVE_INFINITY;
+        let maxX = Number.NEGATIVE_INFINITY;
+        let minY = Number.POSITIVE_INFINITY;
+        let maxY = Number.NEGATIVE_INFINITY;
+
+        for (let i = 0; i < total; i += stride) {
+          const index = i * 3;
+          const x = localPoints[index];
+          const y = localPoints[index + 1];
+          minX = Math.min(minX, x);
+          maxX = Math.max(maxX, x);
+          minY = Math.min(minY, y);
+          maxY = Math.max(maxY, y);
+          seeds.push({ x, y });
+        }
+
+        const spanX = Math.max(0.001, maxX - minX);
+        const spanY = Math.max(0.001, maxY - minY);
+        return seeds.map((seed) => ({
+          x: (seed.x - minX) / spanX - 0.5,
+          y: (seed.y - minY) / spanY - 0.5,
+        }));
+      }
+
+      function getFinaleEmblemTargets() {
+        const width = finaleEffects.width;
+        const height = finaleEffects.height;
+        const compact = width < 760;
+        const size = compact ? 96 : 132;
+        const centerX = width - (compact ? 82 : 118);
+        const centerY = height - (compact ? 150 : 186);
+        return finaleEmblemSeeds.map((seed) => ({
+          x: centerX + seed.x * size,
+          y: centerY - seed.y * size,
+        }));
+      }
+
+      function spawnFinaleBurst(nowMs) {
+        finaleSequence.lastBurstAt = nowMs;
+        const burstX = finaleEffects.width * (0.28 + Math.random() * 0.44);
+        const burstY = finaleEffects.height * (0.14 + Math.random() * 0.24);
+        const count = 54;
+        for (let i = 0; i < count; i += 1) {
+          const angle = (Math.PI * 2 * i) / count + Math.random() * 0.18;
+          const speed = 1.4 + Math.random() * 3.9;
+          finaleSequence.fireworks.push({
+            x: burstX,
+            y: burstY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1,
+            size: 1 + Math.random() * 2.3,
+          });
+        }
+      }
+
+      function startFinaleCelebration(nowMs) {
+        finaleSequence.effectPhase = "fireworks";
+        finaleSequence.phaseStartedAt = nowMs;
+        finaleSequence.lastBurstAt = nowMs;
+        finaleSequence.fireworks = [];
+        finaleSequence.emblemParticles = [];
+        spawnFinaleBurst(nowMs);
+      }
+
+      function drawFinaleEffects(nowMs, delta) {
+        const context = finaleEffects.context;
+        context.clearRect(0, 0, finaleEffects.width, finaleEffects.height);
+
+        if (finaleVisibility <= 0.08 || finaleSequence.effectPhase === "idle") {
+          return;
+        }
+
+        if (finaleSequence.effectPhase === "fireworks") {
+          const elapsed = nowMs - finaleSequence.phaseStartedAt;
+          if (elapsed <= 5000 && nowMs - finaleSequence.lastBurstAt > 420) {
+            spawnFinaleBurst(nowMs);
+          }
+
+          const dt = delta * 60;
+          finaleSequence.fireworks = finaleSequence.fireworks.filter((particle) => {
+            particle.x += particle.vx * dt;
+            particle.y += particle.vy * dt;
+            particle.vx *= 0.992;
+            particle.vy = particle.vy * 0.992 + 0.03 * dt;
+            particle.life -= 0.016 * dt;
+            if (particle.life <= 0) {
+              return false;
+            }
+
+            context.fillStyle = `rgba(255,255,255,${Math.max(0, particle.life * 0.9)})`;
+            context.beginPath();
+            context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            context.fill();
+            return true;
+          });
+
+          if (elapsed > 5600 && finaleSequence.fireworks.length === 0) {
+            finaleSequence.effectPhase = "idle";
+          }
+          return;
+        }
+      }
+
+      function updateFinaleSequence() {
+        const finaleActive = finaleVisibility > 0.56;
+        if (!finaleActive) {
+          if (
+            finaleSequence.index !== 0 ||
+            finaleSequence.effectPhase !== "idle" ||
+            finaleSequence.complete
+          ) {
+            resetFinaleSequence();
+            updateFinaleStage();
+          }
+          return;
+        }
+
+        const symbol = detectFinaleSymbol();
+        finaleSequence.currentSymbol = symbol;
+        const expected = finaleSequence.expected[finaleSequence.index];
+
+        if (finaleSequence.complete) {
+          updateFinaleStage();
+          return;
+        }
+
+        if (symbol && symbol === expected) {
+          finaleSequence.holdFrames += 1;
+          if (finaleSequence.holdFrames >= 3) {
+            finaleSequence.index += 1;
+            finaleSequence.holdFrames = 0;
+            updateFinaleStage();
+            if (finaleSequence.index >= finaleSequence.expected.length) {
+              finaleSequence.complete = true;
+              startFinaleCelebration(performance.now());
+            }
+          }
+        } else if (symbol !== expected) {
+          finaleSequence.holdFrames = 0;
+        }
+
+        updateFinaleStage();
+      }
+
+      function startFistTimer(nowMs) {
+        if (fistTimer.running || !inputVideo.srcObject) {
+          return;
+        }
+
+        fistTimer.running = true;
+        fistTimer.startedAt = nowMs;
+        fistTimer.lastTransitionAt = nowMs;
+        const stamp = formatClock();
+        fistLatestTime.textContent = stamp;
+        logFistStart(stamp, "检测到握拳，收集时间开始");
+        refreshFistUi(nowMs);
+      }
+
+      function stopFistTimer(nowMs) {
+        if (!fistTimer.running) {
+          return;
+        }
+
+        fistTimer.accumulatedMs += nowMs - fistTimer.startedAt;
+        fistTimer.running = false;
+        fistTimer.startedAt = 0;
+        fistTimer.lastTransitionAt = nowMs;
+        refreshFistUi(nowMs);
+      }
+
+      function updateFistTimer(nowMs) {
+        const storyActive = storyVisibility > 0.54;
+        const fistDetected = storyActive && gesture.hasHand && gesture.isFist;
+
+        if (fistDetected) {
+          fistTimer.detectedFrames += 1;
+          fistTimer.releasedFrames = 0;
+          if (
+            !fistTimer.running &&
+            fistTimer.detectedFrames >= 3 &&
+            nowMs - fistTimer.lastTransitionAt > fistTimer.transitionGuardMs
+          ) {
+            startFistTimer(nowMs);
+          }
+        } else {
+          fistTimer.releasedFrames += 1;
+          fistTimer.detectedFrames = 0;
+          if (
+            fistTimer.running &&
+            fistTimer.releasedFrames >= 3 &&
+            nowMs - fistTimer.lastTransitionAt > fistTimer.transitionGuardMs
+          ) {
+            stopFistTimer(nowMs);
+          }
+        }
+
+        if (!storyActive && fistTimer.running) {
+          stopFistTimer(nowMs);
+        }
+
+        refreshFistUi(nowMs);
+      }
+
+      function createPointTexture() {
+        const size = 128;
+        const textureCanvas = document.createElement("canvas");
+        textureCanvas.width = size;
+        textureCanvas.height = size;
+        const context = textureCanvas.getContext("2d");
+        const gradient = context.createRadialGradient(
+          size / 2,
+          size / 2,
+          0,
+          size / 2,
+          size / 2,
+          size / 2
+        );
+        gradient.addColorStop(0, "rgba(255,255,255,1)");
+        gradient.addColorStop(0.24, "rgba(255,255,255,0.96)");
+        gradient.addColorStop(0.6, "rgba(255,255,255,0.22)");
+        gradient.addColorStop(1, "rgba(255,255,255,0)");
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, size, size);
+        const texture = new THREE.CanvasTexture(textureCanvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
+      }
+
+      function createRingTexture() {
+        const size = 512;
+        const textureCanvas = document.createElement("canvas");
+        textureCanvas.width = size;
+        textureCanvas.height = size;
+        const context = textureCanvas.getContext("2d");
+        const gradient = context.createRadialGradient(
+          size / 2,
+          size / 2,
+          size * 0.26,
+          size / 2,
+          size / 2,
+          size / 2
+        );
+        gradient.addColorStop(0, "rgba(255,255,255,0)");
+        gradient.addColorStop(0.52, "rgba(255,255,255,0)");
+        gradient.addColorStop(0.7, "rgba(255,255,255,0.16)");
+        gradient.addColorStop(0.79, "rgba(255,255,255,1)");
+        gradient.addColorStop(0.88, "rgba(255,255,255,0.18)");
+        gradient.addColorStop(1, "rgba(255,255,255,0)");
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, size, size);
+        const texture = new THREE.CanvasTexture(textureCanvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
+      }
+
+      function randomSpherePoint(radius) {
+        const u = Math.random();
+        const v = Math.random();
+        const theta = Math.PI * 2 * u;
+        const phi = Math.acos(2 * v - 1);
+        const shellRadius = radius * (0.986 + Math.random() * 0.018);
+        const sinPhi = Math.sin(phi);
+        return new THREE.Vector3(
+          Math.cos(theta) * sinPhi * shellRadius,
+          Math.sin(theta) * sinPhi * shellRadius,
+          Math.cos(phi) * shellRadius
+        );
+      }
+
+      function createPlanetGeometry(count, radius) {
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(count * 3);
+        const sphereTargets = new Float32Array(count * 3);
+        const scatterTargets = new Float32Array(count * 3);
+        const textTargets = new Float32Array(count * 3);
+        const emblemTargets = new Float32Array(count * 3);
+
+        for (let i = 0; i < count; i += 1) {
+          const point = randomSpherePoint(radius);
+          const index = i * 3;
+          positions[index] = point.x;
+          positions[index + 1] = point.y;
+          positions[index + 2] = point.z;
+          sphereTargets[index] = point.x;
+          sphereTargets[index + 1] = point.y;
+          sphereTargets[index + 2] = point.z;
+
+          const burstDistance = radius * (1.76 + Math.random() * 0.9);
+          const burst = point.clone().normalize().multiplyScalar(burstDistance);
+          burst.x += (Math.random() - 0.5) * 2.8;
+          burst.y += (Math.random() - 0.5) * 2.1;
+          burst.z += (Math.random() - 0.5) * 2.8;
+          scatterTargets[index] = burst.x;
+          scatterTargets[index + 1] = burst.y;
+          scatterTargets[index + 2] = burst.z;
+        }
+
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        return {
+          geometry,
+          positions,
+          sphereTargets,
+          scatterTargets,
+          textTargets,
+          emblemTargets,
+        };
+      }
+
+      function createDustField(count, minRadius, maxRadius) {
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count; i += 1) {
+          const direction = new THREE.Vector3()
+            .randomDirection()
+            .multiplyScalar(minRadius + Math.random() * (maxRadius - minRadius));
+          const index = i * 3;
+          positions[index] = direction.x;
+          positions[index + 1] = direction.y;
+          positions[index + 2] = direction.z;
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        return geometry;
+      }
+
+      function shuffleTriplets(values) {
+        for (let i = values.length / 3 - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const ia = i * 3;
+          const ja = j * 3;
+          for (let k = 0; k < 3; k += 1) {
+            const temp = values[ia + k];
+            values[ia + k] = values[ja + k];
+            values[ja + k] = temp;
+          }
+        }
+        return values;
+      }
+
+      function limitTriplets(values, maxTriplets) {
+        const tripletCount = values.length / 3;
+        if (tripletCount <= maxTriplets) {
+          return new Float32Array(values);
+        }
+
+        const limited = new Float32Array(maxTriplets * 3);
+        const stride = tripletCount / maxTriplets;
+        for (let i = 0; i < maxTriplets; i += 1) {
+          const sourceIndex = Math.floor(i * stride) * 3;
+          const targetIndex = i * 3;
+          limited[targetIndex] = values[sourceIndex];
+          limited[targetIndex + 1] = values[sourceIndex + 1];
+          limited[targetIndex + 2] = values[sourceIndex + 2];
+        }
+        return limited;
+      }
+
+      function sampleCanvas(canvasSource, options = {}) {
+        const context = canvasSource.getContext("2d");
+        const { width, height } = canvasSource;
+        const pixels = context.getImageData(0, 0, width, height).data;
+        const {
+          step = 2,
+          alphaThreshold = 18,
+          brightnessThreshold = 0,
+          scale = 0.003,
+          jitter = 0.01,
+          depth = 0.08,
+          maxTriplets = 90000,
+        } = options;
+        const points = [];
+
+        for (let y = 0; y < height; y += step) {
+          for (let x = 0; x < width; x += step) {
+            const pixelIndex = (y * width + x) * 4;
+            const alpha = pixels[pixelIndex + 3];
+            if (alpha < alphaThreshold) {
+              continue;
+            }
+
+            const brightness =
+              (pixels[pixelIndex] + pixels[pixelIndex + 1] + pixels[pixelIndex + 2]) / 3;
+            if (brightness < brightnessThreshold) {
+              continue;
+            }
+
+            points.push(
+              (x - width / 2) * scale + (Math.random() - 0.5) * jitter,
+              (height / 2 - y) * scale + (Math.random() - 0.5) * jitter,
+              (Math.random() - 0.5) * depth
+            );
+          }
+        }
+
+        return limitTriplets(shuffleTriplets(points), maxTriplets);
+      }
+
+      function buildTextPointCloud() {
+        const textCanvas = document.createElement("canvas");
+        textCanvas.width = 3600;
+        textCanvas.height = 960;
+        const context = textCanvas.getContext("2d");
+        context.clearRect(0, 0, textCanvas.width, textCanvas.height);
+        context.fillStyle = "#ffffff";
+        context.strokeStyle = "#ffffff";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.lineWidth = 8;
+        context.font = '400 392px "Times New Roman", Times, serif';
+        context.strokeText("happy birthday", textCanvas.width / 2, textCanvas.height / 2);
+        context.fillText("happy birthday", textCanvas.width / 2, textCanvas.height / 2);
+
+        return sampleCanvas(textCanvas, {
+          step: 2,
+          alphaThreshold: 16,
+          brightnessThreshold: 180,
+          scale: 0.00308,
+          jitter: 0.009,
+          depth: 0.075,
+          maxTriplets: 96000,
+        });
+      }
+
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.decoding = "async";
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+          image.src = src;
+        });
+      }
+
+      async function buildImagePointCloud(src) {
+        const image = await loadImage(src);
+        const emblemCanvas = document.createElement("canvas");
+        emblemCanvas.width = 900;
+        emblemCanvas.height = 900;
+        const context = emblemCanvas.getContext("2d");
+        const padding = 90;
+        const drawSize = emblemCanvas.width - padding * 2;
+        context.clearRect(0, 0, emblemCanvas.width, emblemCanvas.height);
+        context.drawImage(image, padding, padding, drawSize, drawSize);
+        context.globalCompositeOperation = "source-in";
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, emblemCanvas.width, emblemCanvas.height);
+        context.globalCompositeOperation = "source-over";
+
+        return sampleCanvas(emblemCanvas, {
+          step: 2,
+          alphaThreshold: 8,
+          brightnessThreshold: 110,
+          scale: 0.00495,
+          jitter: 0.0048,
+          depth: 0.05,
+          maxTriplets: 98000,
+        });
+      }
+
+      function smoothstep(edge0, edge1, value) {
+        const x = THREE.MathUtils.clamp((value - edge0) / (edge1 - edge0), 0, 1);
+        return x * x * (3 - 2 * x);
+      }
+
+      function getSectionWeight(section, spread = 0.92) {
+        const rect = section.getBoundingClientRect();
+        const sectionCenter = rect.top + rect.height * 0.5;
+        const viewportCenter = window.innerHeight * 0.5;
+        const distance = Math.abs(sectionCenter - viewportCenter);
+        const raw = THREE.MathUtils.clamp(1 - distance / (window.innerHeight * spread), 0, 1);
+        return smoothstep(0, 1, raw);
+      }
+
+      function getEmblemAnchor() {
+        const aspect = window.innerWidth / window.innerHeight;
+        const compact = window.innerWidth < 760;
+        return {
+          x: compact ? -4.1 : THREE.MathUtils.clamp(-5.8 - (aspect - 1.1) * 0.65, -6.9, -5.3),
+          y: compact ? 2.8 : 4.15,
+          z: 0.46,
+        };
+      }
+
+      const particleTexture = createPointTexture();
+      const haloTexture = createRingTexture();
+
+      const planet = createPlanetGeometry(24800, 3.95);
+      const textLocalPoints = buildTextPointCloud();
+      const emblemLocalPoints = await buildImagePointCloud("./sjtu-emblem-white.svg").catch(
+        (error) => {
+          console.error("Unable to load emblem target:", error);
+          return textLocalPoints;
+        }
+      );
+      const finaleEmblemSeeds = extractEmblemSeeds(emblemLocalPoints);
+
+      const planetMaterial = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.092,
+        transparent: true,
+        opacity: 0.98,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        map: particleTexture,
+        sizeAttenuation: true,
+      });
+      const planetPoints = new THREE.Points(planet.geometry, planetMaterial);
+      scene.add(planetPoints);
+
+      const planetGlow = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: particleTexture,
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.14,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+        })
+      );
+      planetGlow.scale.set(11.4, 11.4, 1);
+      scene.add(planetGlow);
+
+      function createHaloMaterial(color, opacity) {
+        return new THREE.MeshBasicMaterial({
+          map: haloTexture,
+          color,
+          transparent: true,
+          opacity,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+        });
+      }
+
+      const haloGoldWash = new THREE.Mesh(
+        new THREE.RingGeometry(4.9, 7.45, 180),
+        createHaloMaterial(0xf5ddb2, 0.18)
+      );
+      haloGoldWash.rotation.set(1.08, 0.18, 0.52);
+      scene.add(haloGoldWash);
+
+      const haloSoft = new THREE.Mesh(
+        new THREE.RingGeometry(4.72, 7.02, 180),
+        createHaloMaterial(0xfff5df, 0.2)
+      );
+      haloSoft.rotation.set(1.08, 0.18, 0.52);
+      scene.add(haloSoft);
+
+      const haloCore = new THREE.Mesh(
+        new THREE.RingGeometry(5.44, 5.7, 220),
+        createHaloMaterial(0xffffff, 0.8)
+      );
+      haloCore.rotation.copy(haloSoft.rotation);
+      scene.add(haloCore);
+
+      const haloAccent = new THREE.Mesh(
+        new THREE.RingGeometry(4.34, 4.54, 180),
+        createHaloMaterial(0xf1d39a, 0.26)
+      );
+      haloAccent.rotation.set(0.92, -0.14, 0.18);
+      scene.add(haloAccent);
+
+      const starMist = new THREE.Points(
+        createDustField(1400, 18, 42),
+        new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: 0.046,
+          transparent: true,
+          opacity: 0.12,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          map: particleTexture,
+        })
+      );
+      scene.add(starMist);
+
+      const ambientStars = new THREE.Points(
+        createDustField(2200, 24, 54),
+        new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: 0.04,
+          transparent: true,
+          opacity: 0.16,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          map: particleTexture,
+        })
+      );
+      scene.add(ambientStars);
+
+      function randomPointOnSegment(a, b) {
+        const t = Math.random();
+        return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+      }
+
+      function buildingPointCloud(building) {
+        const samples = [];
+        const wallLayers = Math.max(3, Math.round(building.height / 8));
+
+        for (let i = 0; i < building.points.length - 1; i += 1) {
+          const a = building.points[i];
+          const b = building.points[i + 1];
+          const segmentLength = Math.hypot(b[0] - a[0], b[1] - a[1]);
+          const segmentSamples = Math.max(3, Math.round(segmentLength / 12));
+          for (let j = 0; j < segmentSamples; j += 1) {
+            const [x, z] = randomPointOnSegment(a, b);
+            for (let level = 0; level <= wallLayers; level += 1) {
+              samples.push(x, (level / wallLayers) * building.height, z);
+            }
+          }
+        }
+
+        const roofSamples = Math.max(24, Math.round(building.area / 180));
+        for (let i = 0; i < roofSamples; i += 1) {
+          const anchor = building.points[i % (building.points.length - 1)];
+          const next = building.points[(i + 1) % (building.points.length - 1)];
+          const [x, z] = randomPointOnSegment(anchor, next);
+          samples.push(
+            x + (Math.random() - 0.5) * 24,
+            building.height + Math.random() * 8,
+            z + (Math.random() - 0.5) * 24
+          );
+        }
+
+        return samples;
+      }
+
+      function createFallbackCampusData() {
+        return {
+          meta: {
+            boundsXY: [-680, -200, 680, 260],
+          },
+          buildings: [
+            {
+              height: 22,
+              area: 4200,
+              points: [
+                [-620, -60],
+                [-540, -60],
+                [-540, 40],
+                [-620, 40],
+                [-620, -60],
+              ],
+            },
+            {
+              height: 28,
+              area: 5600,
+              points: [
+                [-420, -80],
+                [-250, -80],
+                [-250, 60],
+                [-420, 60],
+                [-420, -80],
+              ],
+            },
+            {
+              height: 34,
+              area: 7000,
+              points: [
+                [-110, -90],
+                [90, -90],
+                [90, 80],
+                [-110, 80],
+                [-110, -90],
+              ],
+            },
+            {
+              height: 24,
+              area: 4600,
+              points: [
+                [190, -70],
+                [360, -70],
+                [360, 54],
+                [190, 54],
+                [190, -70],
+              ],
+            },
+            {
+              height: 18,
+              area: 3200,
+              points: [
+                [450, -48],
+                [620, -48],
+                [620, 32],
+                [450, 32],
+                [450, -48],
+              ],
+            },
+          ],
+        };
+      }
+
+      function getCampusDataset() {
+        if (!window.SJTU_CAMPUS_DATA?.buildings?.length) {
+          return createFallbackCampusData();
+        }
+
+        const buildings = window.SJTU_CAMPUS_DATA.buildings.filter(
+          (building) => building.area > 1400 && building.points.length > 4
+        );
+
+        return {
+          meta: window.SJTU_CAMPUS_DATA.meta,
+          buildings,
+        };
+      }
+
+      function getDatasetBounds(buildings) {
+        let minX = Number.POSITIVE_INFINITY;
+        let minY = Number.POSITIVE_INFINITY;
+        let maxX = Number.NEGATIVE_INFINITY;
+        let maxY = Number.NEGATIVE_INFINITY;
+
+        for (const building of buildings) {
+          for (const point of building.points) {
+            minX = Math.min(minX, point[0]);
+            minY = Math.min(minY, point[1]);
+            maxX = Math.max(maxX, point[0]);
+            maxY = Math.max(maxY, point[1]);
+          }
+        }
+
+        return [minX, minY, maxX, maxY];
+      }
+
+      function createCampusScene(dataset) {
+        const campusGroup = new THREE.Group();
+        const positions = [];
+        const scales = [];
+        const seeds = [];
+        const lineVertices = [];
+
+        for (const building of dataset.buildings) {
+          const pts = buildingPointCloud(building);
+          for (let i = 0; i < pts.length; i += 3) {
+            positions.push(pts[i], pts[i + 1], pts[i + 2]);
+            scales.push(0.7 + Math.random() * 1.8);
+            seeds.push(Math.random() * Math.PI * 2);
+          }
+
+          for (let i = 0; i < building.points.length - 1; i += 1) {
+            const a = building.points[i];
+            const b = building.points[i + 1];
+            lineVertices.push(a[0], 0, a[1], b[0], 0, b[1]);
+            lineVertices.push(a[0], building.height, a[1], b[0], building.height, b[1]);
+            lineVertices.push(a[0], 0, a[1], a[0], building.height, a[1]);
+          }
+        }
+
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        geo.setAttribute("aScale", new THREE.Float32BufferAttribute(scales, 1));
+        geo.setAttribute("aSeed", new THREE.Float32BufferAttribute(seeds, 1));
+
+        const uniforms = {
+          uTime: { value: 0 },
+          uWarm: { value: 1.0 },
+          uOpacity: { value: 0.0 },
+        };
+
+        const pointMaterial = new THREE.ShaderMaterial({
+          uniforms,
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          vertexShader: `
+            attribute float aScale;
+            attribute float aSeed;
+            uniform float uTime;
+            varying float vPulse;
+            varying float vHeight;
+            void main() {
+              vec3 transformed = position;
+              float drift = sin(uTime * 0.65 + aSeed + position.y * 0.022) * 1.8;
+              transformed.y += drift;
+              vec4 mvPosition = modelViewMatrix * vec4(transformed, 1.0);
+              gl_Position = projectionMatrix * mvPosition;
+              gl_PointSize = aScale * (460.0 / -mvPosition.z);
+              vPulse = 0.55 + 0.45 * sin(uTime * 1.2 + aSeed);
+              vHeight = position.y;
+            }
+          `,
+          fragmentShader: `
+            uniform float uWarm;
+            uniform float uOpacity;
+            varying float vPulse;
+            varying float vHeight;
+            void main() {
+              vec2 uv = gl_PointCoord - vec2(0.5);
+              float d = length(uv);
+              float alpha = smoothstep(0.5, 0.0, d);
+              vec3 warm = vec3(1.0, 0.86, 0.72);
+              vec3 deep = vec3(1.0, 0.42, 0.52);
+              vec3 cool = vec3(1.0, 0.97, 0.95);
+              vec3 color = mix(cool, mix(deep, warm, clamp(vHeight / 42.0, 0.0, 1.0)), uWarm);
+              color *= 1.05 + vPulse * 0.85;
+              gl_FragColor = vec4(color, alpha * (0.58 + 0.42 * vPulse) * uOpacity);
+            }
+          `,
+        });
+
+        const particleCloud = new THREE.Points(geo, pointMaterial);
+        campusGroup.add(particleCloud);
+
+        const lineGeo = new THREE.BufferGeometry();
+        lineGeo.setAttribute("position", new THREE.Float32BufferAttribute(lineVertices, 3));
+        const lineMaterial = new THREE.LineBasicMaterial({
+          color: 0xfff2de,
+          transparent: true,
+          opacity: 0,
+        });
+        const campusLines = new THREE.LineSegments(lineGeo, lineMaterial);
+        campusGroup.add(campusLines);
+
+        const bounds =
+          dataset.buildings.length > 0
+            ? getDatasetBounds(dataset.buildings)
+            : dataset.meta?.boundsXY || [-600, -300, 600, 300];
+        const centerX = (bounds[0] + bounds[2]) * 0.5;
+        const centerY = (bounds[1] + bounds[3]) * 0.5;
+        const horizontalScale = 0.014;
+        const verticalScale = 0.052;
+
+        particleCloud.position.set(-centerX, 0, -centerY);
+        particleCloud.scale.set(horizontalScale, verticalScale, horizontalScale);
+        campusLines.position.copy(particleCloud.position);
+        campusLines.scale.copy(particleCloud.scale);
+        campusGroup.rotation.y = -0.48;
+        campusGroup.position.set(0, -2.55, -0.18);
+        scene.add(campusGroup);
+
+        const ground = new THREE.Mesh(
+          new THREE.CircleGeometry(8.9, 96),
+          new THREE.MeshBasicMaterial({
+            color: 0x2b0d14,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+          })
+        );
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.set(0, -3.2, -0.16);
+        scene.add(ground);
+
+        const pulseRing = new THREE.Mesh(
+          new THREE.RingGeometry(5.8, 6.05, 96),
+          new THREE.MeshBasicMaterial({
+            color: 0xc62d41,
+            transparent: true,
+            opacity: 0,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+          })
+        );
+        pulseRing.rotation.x = -Math.PI / 2;
+        pulseRing.position.set(0, -2.9, -0.12);
+        scene.add(pulseRing);
+
+        const glowPlane = new THREE.Mesh(
+          new THREE.PlaneGeometry(18, 18),
+          new THREE.MeshBasicMaterial({
+            color: 0x7f1624,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+          })
+        );
+        glowPlane.rotation.x = -Math.PI / 2;
+        glowPlane.position.set(0, -3.18, -0.18);
+        scene.add(glowPlane);
+
+        return {
+          group: campusGroup,
+          uniforms,
+          lineMaterial,
+          ground,
+          pulseRing,
+          glowPlane,
+        };
+      }
+
+      function drawGlowDot(context, x, y, radius, alpha) {
+        context.fillStyle = `rgba(255, 245, 228, ${alpha})`;
+        context.beginPath();
+        context.arc(x, y, radius, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      function drawDottedSegment(context, a, b, spacing, alpha) {
+        const dx = b[0] - a[0];
+        const dy = b[1] - a[1];
+        const distance = Math.hypot(dx, dy);
+        const steps = Math.max(2, Math.floor(distance / spacing));
+        for (let i = 0; i <= steps; i += 1) {
+          const t = i / steps;
+          const x = a[0] + dx * t;
+          const y = a[1] + dy * t;
+          drawGlowDot(
+            context,
+            x,
+            y,
+            i % 4 === 0 ? 1.5 : 1.0,
+            alpha * (0.72 + Math.random() * 0.28)
+          );
+        }
+      }
+
+      function drawCampusOverlay(dataset) {
+        const rect = campusOverlay.getBoundingClientRect();
+        const width = Math.max(1, Math.round(rect.width));
+        const height = Math.max(1, Math.round(rect.height));
+        const dpr = Math.min(window.devicePixelRatio, 2);
+        campusOverlay.width = Math.round(width * dpr);
+        campusOverlay.height = Math.round(height * dpr);
+
+        const context = campusOverlay.getContext("2d");
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        context.clearRect(0, 0, width, height);
+
+        const glow = context.createLinearGradient(0, 0, 0, height);
+        glow.addColorStop(0, "rgba(255,255,255,0)");
+        glow.addColorStop(0.45, "rgba(255,236,214,0.08)");
+        glow.addColorStop(1, "rgba(255,212,188,0.16)");
+        context.fillStyle = glow;
+        context.fillRect(0, 0, width, height);
+
+        const bounds = getDatasetBounds(dataset.buildings);
+        const paddingX = Math.min(56, width * 0.06);
+        const paddingBottom = 18;
+        const centerX = (bounds[0] + bounds[2]) * 0.5;
+        const centerY = (bounds[1] + bounds[3]) * 0.5;
+        const spanX = bounds[2] - bounds[0];
+        const spanY = bounds[3] - bounds[1];
+        const scale = Math.min(
+          (width - paddingX * 2) / (spanX + spanY * 0.3),
+          (height - 50) / (spanY * 0.18 + 18)
+        );
+
+        const project = (x, y, elevation = 0) => {
+          const nx = x - centerX;
+          const ny = y - centerY;
+          return [
+            width * 0.5 + nx * scale + ny * scale * 0.18,
+            height - paddingBottom - ny * scale * 0.07 - elevation * scale * 0.58,
+          ];
+        };
+
+        context.strokeStyle = "rgba(255, 243, 223, 0.32)";
+        context.lineWidth = 1.2;
+
+        for (const building of dataset.buildings) {
+          const topPoints = building.points.map((point) =>
+            project(point[0], point[1], building.height)
+          );
+          const basePoints = building.points.map((point) => project(point[0], point[1], 0));
+
+          for (let i = 0; i < basePoints.length - 1; i += 1) {
+            context.beginPath();
+            context.moveTo(basePoints[i][0], basePoints[i][1]);
+            context.lineTo(basePoints[i + 1][0], basePoints[i + 1][1]);
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(topPoints[i][0], topPoints[i][1]);
+            context.lineTo(topPoints[i + 1][0], topPoints[i + 1][1]);
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(basePoints[i][0], basePoints[i][1]);
+            context.lineTo(topPoints[i][0], topPoints[i][1]);
+            context.stroke();
+
+            drawDottedSegment(context, basePoints[i], basePoints[i + 1], 7.5, 0.72);
+            drawDottedSegment(context, topPoints[i], topPoints[i + 1], 7.5, 0.9);
+            drawDottedSegment(context, basePoints[i], topPoints[i], 8.5, 0.52);
+          }
+        }
+
+        context.strokeStyle = "rgba(255, 231, 212, 0.28)";
+        context.beginPath();
+        context.moveTo(0, height - 10);
+        context.lineTo(width, height - 10);
+        context.stroke();
+      }
+
+      const campusDataset = getCampusDataset();
+      const campus = createCampusScene(campusDataset);
+      drawCampusOverlay(campusDataset);
+
+      function updateBillboardTargets(destination, localPoints, anchor = { x: 0, y: 0, z: 0 }) {
+        tempForward.copy(camera.position).sub(target).normalize();
+        tempRight.set(0, 1, 0).cross(tempForward).normalize();
+        if (tempRight.lengthSq() < 1e-6) {
+          tempRight.set(1, 0, 0);
+        }
+        tempUp.copy(tempForward).cross(tempRight).normalize();
+
+        const fx = tempForward.x;
+        const fy = tempForward.y;
+        const fz = tempForward.z;
+        const rx = tempRight.x;
+        const ry = tempRight.y;
+        const rz = tempRight.z;
+        const ux = tempUp.x;
+        const uy = tempUp.y;
+        const uz = tempUp.z;
+        const localCount = localPoints.length / 3;
+        const count = planet.positions.length / 3;
+
+        for (let i = 0; i < count; i += 1) {
+          const pointIndex = (i % localCount) * 3;
+          const x = localPoints[pointIndex] + anchor.x;
+          const y = localPoints[pointIndex + 1] + anchor.y;
+          const z = localPoints[pointIndex + 2] + anchor.z;
+          const index = i * 3;
+          destination[index] = rx * x + ux * y + fx * z;
+          destination[index + 1] = ry * x + uy * y + fy * z;
+          destination[index + 2] = rz * x + uz * y + fz * z;
+        }
+      }
+
+      function morphPlanet(textInfluence, emblemInfluence) {
+        const positions = planet.geometry.attributes.position.array;
+        const count = positions.length / 3;
+        const formationProgress = THREE.MathUtils.clamp(
+          Math.max(textInfluence, emblemInfluence),
+          0,
+          1
+        );
+        const scatterPhase = smoothstep(0, 0.34, formationProgress);
+        const targetPhase = smoothstep(0.24, 1, formationProgress);
+        const blendTotal = textInfluence + emblemInfluence;
+        const emblemMix = blendTotal > 0.0001 ? emblemInfluence / blendTotal : 0;
+
+        for (let i = 0; i < count; i += 1) {
+          const index = i * 3;
+          const sx = planet.sphereTargets[index];
+          const sy = planet.sphereTargets[index + 1];
+          const sz = planet.sphereTargets[index + 2];
+          const bx = planet.scatterTargets[index];
+          const by = planet.scatterTargets[index + 1];
+          const bz = planet.scatterTargets[index + 2];
+          const tx = planet.textTargets[index];
+          const ty = planet.textTargets[index + 1];
+          const tz = planet.textTargets[index + 2];
+          const ex = planet.emblemTargets[index];
+          const ey = planet.emblemTargets[index + 1];
+          const ez = planet.emblemTargets[index + 2];
+
+          const scatterX = THREE.MathUtils.lerp(sx, bx, scatterPhase);
+          const scatterY = THREE.MathUtils.lerp(sy, by, scatterPhase);
+          const scatterZ = THREE.MathUtils.lerp(sz, bz, scatterPhase);
+          const targetX = THREE.MathUtils.lerp(tx, ex, emblemMix);
+          const targetY = THREE.MathUtils.lerp(ty, ey, emblemMix);
+          const targetZ = THREE.MathUtils.lerp(tz, ez, emblemMix);
+
+          positions[index] = THREE.MathUtils.lerp(scatterX, targetX, targetPhase);
+          positions[index + 1] = THREE.MathUtils.lerp(scatterY, targetY, targetPhase);
+          positions[index + 2] = THREE.MathUtils.lerp(scatterZ, targetZ, targetPhase);
+        }
+
+        planet.geometry.attributes.position.needsUpdate = true;
+      }
+
+      function setCameraPosition() {
+        const x = Math.cos(cameraAzimuth) * Math.cos(cameraElevation) * cameraRadius;
+        const y = Math.sin(cameraElevation) * cameraRadius;
+        const z = Math.sin(cameraAzimuth) * Math.cos(cameraElevation) * cameraRadius;
+        camera.position.set(x, y, z);
+        camera.lookAt(target);
+      }
+
+      function normaliseAngle(angle) {
+        return Math.atan2(Math.sin(angle), Math.cos(angle));
+      }
+
+      function distance2D(a, b) {
+        return Math.hypot(a.x - b.x, a.y - b.y);
+      }
+
+      function fingerExtended(landmarks, tip, pip, mcp) {
+        const wrist = landmarks[0];
+        return (
+          distance2D(landmarks[tip], wrist) > distance2D(landmarks[pip], wrist) * 1.08 &&
+          distance2D(landmarks[tip], landmarks[mcp]) >
+            distance2D(landmarks[pip], landmarks[mcp]) * 1.12
+        );
+      }
+
+      function thumbExtended(landmarks) {
+        return (
+          distance2D(landmarks[4], landmarks[2]) > distance2D(landmarks[3], landmarks[2]) * 1.18 &&
+          distance2D(landmarks[4], landmarks[5]) > distance2D(landmarks[3], landmarks[5]) * 1.05
+        );
+      }
+
+      function palmCenter(landmarks) {
+        const points = [landmarks[0], landmarks[5], landmarks[9], landmarks[13], landmarks[17]];
+        return points.reduce(
+          (sum, point) => ({
+            x: sum.x + point.x / points.length,
+            y: sum.y + point.y / points.length,
+          }),
+          { x: 0, y: 0 }
+        );
+      }
+
+      function evaluateGesture(landmarks) {
+        const xs = landmarks.map((point) => point.x);
+        const ys = landmarks.map((point) => point.y);
+        const width = Math.max(...xs) - Math.min(...xs);
+        const height = Math.max(...ys) - Math.min(...ys);
+        const rawSize = Math.sqrt(width * height);
+        gesture.smoothSize = THREE.MathUtils.lerp(gesture.smoothSize, rawSize, 0.2);
+
+        const extensions = [
+          thumbExtended(landmarks),
+          fingerExtended(landmarks, 8, 6, 5),
+          fingerExtended(landmarks, 12, 10, 9),
+          fingerExtended(landmarks, 16, 14, 13),
+          fingerExtended(landmarks, 20, 18, 17),
+        ];
+        const extendedCount = extensions.filter(Boolean).length;
+        gesture.fingerCount = extendedCount;
+        gesture.nonThumbCount = extensions.slice(1).filter(Boolean).length;
+        const center = palmCenter(landmarks);
+        const foldedAverage =
+          [4, 8, 12, 16, 20].reduce(
+            (sum, tipIndex) => sum + distance2D(landmarks[tipIndex], center),
+            0
+          ) / 5;
+
+        gesture.isOpen = extendedCount >= 4;
+        gesture.isFist = extendedCount <= 1 && foldedAverage < gesture.smoothSize * 1.08;
+
+        if (!gesture.isOpen && !gesture.isFist) {
+          gesture.neutralSize = THREE.MathUtils.lerp(gesture.neutralSize, gesture.smoothSize, 0.03);
+        }
+
+        gesture.openNear = gesture.isOpen && gesture.smoothSize > gesture.neutralSize * 1.16;
+        gesture.fistFar = gesture.isFist && gesture.smoothSize < gesture.neutralSize * 0.93;
+
+        const palmAngle = Math.atan2(
+          landmarks[17].y - landmarks[5].y,
+          landmarks[17].x - landmarks[5].x
+        );
+
+        if (gesture.palmAngle !== null && interactionEnabled && morphProgress < 0.68) {
+          const delta = normaliseAngle(palmAngle - gesture.palmAngle);
+          orbitVelocity += THREE.MathUtils.clamp(-delta * 4.6, -1.2, 1.2);
+        }
+
+        gesture.palmAngle = palmAngle;
+      }
+
+      function handleResults(results) {
+        if (results.multiHandLandmarks && results.multiHandLandmarks.length) {
+          gesture.hasHand = true;
+          evaluateGesture(results.multiHandLandmarks[0]);
+        } else {
+          gesture.hasHand = false;
+          gesture.isOpen = false;
+          gesture.isFist = false;
+          gesture.openNear = false;
+          gesture.fistFar = false;
+          gesture.fingerCount = 0;
+          gesture.nonThumbCount = 0;
+          gesture.palmAngle = null;
+        }
+      }
+
+      async function setupHandTracking() {
+        if (!window.Hands || !window.Camera) {
+          return;
+        }
+
+        try {
+          const hands = new window.Hands({
+            locateFile(file) {
+              return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+            },
+          });
+
+          hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.72,
+            minTrackingConfidence: 0.72,
+          });
+          hands.onResults(handleResults);
+
+          const videoCamera = new window.Camera(inputVideo, {
+            width: 640,
+            height: 480,
+            onFrame: async () => {
+              await hands.send({ image: inputVideo });
+            },
+          });
+
+          await videoCamera.start();
+          syncCameraFeeds();
+        } catch (error) {
+          console.warn("Camera permission unavailable:", error);
+          storyCameraLabel.textContent = "camera offline";
+          setFistStatus("摄像头不可用", "error");
+          finaleCameraPlaceholder.style.display = "";
+        }
+      }
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        updateBillboardTargets(planet.textTargets, textLocalPoints);
+        updateBillboardTargets(planet.emblemTargets, emblemLocalPoints, getEmblemAnchor());
+        drawCampusOverlay(campusDataset);
+        resizeFinaleEffectsCanvas();
+      });
+
+      const clock = new THREE.Clock();
+      setCameraPosition();
+      updateBillboardTargets(planet.textTargets, textLocalPoints);
+      updateBillboardTargets(planet.emblemTargets, emblemLocalPoints, getEmblemAnchor());
+      setupHandTracking();
+      refreshFistUi(0);
+      updateFinaleStage();
+      resizeFinaleEffectsCanvas();
+
+      function animate() {
+        const delta = Math.min(clock.getDelta(), 0.033);
+        const elapsed = clock.elapsedTime;
+        const nowMs = performance.now();
+
+        heroVisibility = getSectionWeight(heroSection, 0.92);
+        storyVisibility = getSectionWeight(storySection, 0.92);
+        finaleVisibility = getSectionWeight(finaleSection, 0.98);
+
+        syncCameraFeeds();
+        updateFistTimer(nowMs);
+        updateFinaleSequence();
+
+        const emblemTarget =
+          smoothstep(0.18, 0.82, storyVisibility) *
+          (1 - smoothstep(0.18, 0.88, finaleVisibility));
+        const campusTarget = smoothstep(0.22, 0.9, finaleVisibility);
+
+        emblemReveal = THREE.MathUtils.damp(emblemReveal, emblemTarget, 3.2, delta);
+        campusReveal = THREE.MathUtils.damp(campusReveal, campusTarget, 2.4, delta);
+        interactionEnabled = heroVisibility > 0.5 && emblemReveal < 0.16 && campusReveal < 0.08;
+
+        if (interactionEnabled && gesture.hasHand && gesture.openNear) {
+          morphHold = 1.45;
+        } else {
+          morphHold = Math.max(0, morphHold - delta);
+        }
+
+        const morphTarget = interactionEnabled && morphHold > 0 ? 1 : 0;
+        morphProgress = THREE.MathUtils.damp(
+          morphProgress,
+          morphTarget,
+          morphTarget > morphProgress ? 3.6 : 1.6,
+          delta
+        );
+
+        if (interactionEnabled && gesture.hasHand && gesture.openNear) {
+          zoomOutVelocity = THREE.MathUtils.damp(zoomOutVelocity, 0, 8, delta);
+          cameraRadius = THREE.MathUtils.damp(cameraRadius, minCameraRadius, 5.1, delta);
+        } else if (interactionEnabled && gesture.hasHand && gesture.fistFar) {
+          const drive =
+            3.4 + ((cameraRadius - minCameraRadius) / (maxCameraRadius - minCameraRadius)) * 8;
+          zoomOutVelocity = THREE.MathUtils.lerp(zoomOutVelocity, drive, 0.06);
+          cameraRadius = Math.min(maxCameraRadius, cameraRadius + zoomOutVelocity * delta);
+        } else {
+          zoomOutVelocity = THREE.MathUtils.damp(zoomOutVelocity, 0, 4.5, delta);
+          const homeRadius = interactionEnabled
+            ? morphProgress > 0.22
+              ? minCameraRadius + 0.38
+              : defaultCameraRadius
+            : THREE.MathUtils.lerp(15.4, 18.2, campusReveal);
+          cameraRadius = THREE.MathUtils.damp(
+            cameraRadius,
+            homeRadius,
+            interactionEnabled ? 1.5 : 1.9,
+            delta
+          );
+        }
+
+        const autoOrbitRate = interactionEnabled
+          ? morphProgress > 0.62
+            ? 0.018
+            : 0.1
+          : THREE.MathUtils.lerp(0.048, 0.024, campusReveal);
+        orbitVelocity *= Math.exp(-3.2 * delta);
+        cameraAzimuth += (autoOrbitRate + (interactionEnabled ? orbitVelocity : 0)) * delta;
+        cameraElevation = THREE.MathUtils.damp(
+          cameraElevation,
+          interactionEnabled
+            ? morphProgress > 0.56
+              ? 0.12
+              : 0.22
+            : THREE.MathUtils.lerp(0.19, 0.26, campusReveal),
+          2.4,
+          delta
+        );
+
+        setCameraPosition();
+
+        updateBillboardTargets(planet.textTargets, textLocalPoints);
+        updateBillboardTargets(planet.emblemTargets, emblemLocalPoints, getEmblemAnchor());
+
+        const heroTextInfluence = morphProgress * heroVisibility * (1 - emblemReveal);
+        morphPlanet(heroTextInfluence, emblemReveal);
+
+        const textPhase = smoothstep(0.42, 1, heroTextInfluence);
+        const particleFade = THREE.MathUtils.clamp(
+          Math.max(heroVisibility, emblemReveal * 0.98) * (1 - campusReveal * 0.96),
+          0,
+          1
+        );
+        const planetGlowFade = heroVisibility * (1 - emblemReveal) * (1 - campusReveal);
+        const haloFade =
+          heroVisibility *
+          (1 - textPhase * 0.66) *
+          (1 - emblemReveal * 0.92) *
+          (1 - campusReveal);
+
+        planetMaterial.opacity = 0.98 * particleFade;
+        planetMaterial.size = THREE.MathUtils.lerp(
+          0.084 + textPhase * 0.016,
+          0.068,
+          emblemReveal
+        );
+        planetGlow.material.opacity = (0.14 - textPhase * 0.08) * planetGlowFade;
+
+        haloGoldWash.material.opacity = 0.18 * haloFade;
+        haloSoft.material.opacity = 0.2 * haloFade;
+        haloCore.material.opacity = 0.8 * haloFade;
+        haloAccent.material.opacity = 0.26 * haloFade;
+
+        haloGoldWash.rotation.z += delta * 0.05;
+        haloSoft.rotation.z += delta * 0.07;
+        haloCore.rotation.z += delta * 0.055;
+        haloAccent.rotation.z -= delta * 0.04;
+
+        starMist.rotation.y += delta * 0.012;
+        starMist.rotation.x -= delta * 0.006;
+        ambientStars.rotation.y -= delta * 0.004;
+        starMist.material.opacity = THREE.MathUtils.lerp(0.12, 0.16, campusReveal);
+        ambientStars.material.opacity = THREE.MathUtils.lerp(0.16, 0.22, campusReveal);
+
+        campus.uniforms.uTime.value = elapsed;
+        campus.uniforms.uOpacity.value = Math.min(1, campusReveal * 1.85);
+        campus.lineMaterial.opacity = 0.92 * campusReveal;
+        campus.glowPlane.material.opacity = 0.28 * campusReveal;
+        campus.group.position.y = THREE.MathUtils.lerp(-2.15, -2.55, campusReveal);
+        campus.group.position.z = THREE.MathUtils.lerp(0.16, -0.18, campusReveal);
+        campus.group.rotation.y = -0.48 + Math.sin(elapsed * 0.12) * 0.08;
+        campus.glowPlane.position.y = THREE.MathUtils.lerp(-2.75, -3.18, campusReveal);
+        campus.glowPlane.position.z = THREE.MathUtils.lerp(0.12, -0.18, campusReveal);
+        campus.ground.material.opacity = 0.18 * campusReveal;
+        campus.ground.position.y = THREE.MathUtils.lerp(-2.85, -3.2, campusReveal);
+        campus.ground.position.z = THREE.MathUtils.lerp(0.08, -0.16, campusReveal);
+        campus.pulseRing.material.opacity =
+          (0.08 + (Math.sin(elapsed * 0.95) * 0.5 + 0.5) * 0.08) * campusReveal;
+        campus.pulseRing.position.y = THREE.MathUtils.lerp(-2.55, -2.9, campusReveal);
+        campus.pulseRing.position.z = THREE.MathUtils.lerp(0.1, -0.12, campusReveal);
+        campus.pulseRing.scale.setScalar(1 + Math.sin(elapsed * 0.95) * 0.05);
+        campusOverlay.style.opacity = String(campusReveal * 0.96);
+
+        planetPoints.visible = particleFade > 0.01;
+        planetGlow.visible = planetGlowFade > 0.01;
+        haloGoldWash.visible = haloFade > 0.01;
+        haloSoft.visible = haloFade > 0.01;
+        haloCore.visible = haloFade > 0.01;
+        haloAccent.visible = haloFade > 0.01;
+        campus.group.visible = campusReveal > 0.01;
+        campus.ground.visible = campusReveal > 0.01;
+        campus.pulseRing.visible = campusReveal > 0.01;
+        campus.glowPlane.visible = campusReveal > 0.01;
+
+        renderer.render(scene, camera);
+        drawFinaleEffects(nowMs, delta);
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>
