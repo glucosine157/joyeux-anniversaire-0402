@@ -100,6 +100,44 @@
         z-index: 1;
       }
 
+      .audio-toggle {
+        position: fixed;
+        top: clamp(1.2rem, 3vh, 2rem);
+        left: clamp(1.2rem, 3vw, 2rem);
+        z-index: 5;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        min-height: 2.5rem;
+        padding: 0 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        background: rgba(10, 8, 14, 0.24);
+        color: rgba(255, 249, 249, 0.86);
+        font-family: "Times New Roman", Times, serif;
+        font-size: 0.82rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        cursor: pointer;
+      }
+
+      .audio-toggle::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.36);
+        box-shadow: 0 0 0.9rem rgba(255, 255, 255, 0.14);
+      }
+
+      .audio-toggle.is-playing::before {
+        background: rgba(190, 255, 216, 0.96);
+        box-shadow: 0 0 0.9rem rgba(190, 255, 216, 0.42);
+      }
+
       .hero::before {
         background-image:
           radial-gradient(circle at 10% 18%, rgba(255, 255, 255, 0.92) 0 1px, transparent 2px),
@@ -816,6 +854,10 @@
     <canvas id="scene" aria-hidden="true"></canvas>
     <div class="grain" aria-hidden="true"></div>
     <video id="input-video" playsinline muted></video>
+    <audio id="bgm" preload="auto" loop playsinline>
+      <source src="./akuma-no-ko.mp3" type="audio/mpeg" />
+    </audio>
+    <button class="audio-toggle" id="audio-toggle" type="button">music off</button>
 
     <main id="scroller">
       <section class="section hero">
@@ -966,9 +1008,52 @@
       const finaleEffectsCanvas = document.getElementById("finale-effects");
       const finaleStageLines = Array.from(document.querySelectorAll("[data-stage-line]"));
       const finaleStageHint = document.getElementById("finale-stage-hint");
+      const bgm = document.getElementById("bgm");
+      const audioToggle = document.getElementById("audio-toggle");
 
       birthdayOverlay.style.display = "none";
       window.alert = () => {};
+      bgm.volume = 0.54;
+
+      function setAudioState(isPlaying, label = null) {
+        audioToggle.textContent = label ?? (isPlaying ? "music on" : "music off");
+        audioToggle.classList.toggle("is-playing", isPlaying);
+      }
+
+      async function playBgm() {
+        try {
+          await bgm.play();
+          setAudioState(true);
+          return true;
+        } catch (error) {
+          setAudioState(false, "tap music");
+          return false;
+        }
+      }
+
+      function pauseBgm() {
+        bgm.pause();
+        setAudioState(false);
+      }
+
+      audioToggle.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        if (bgm.paused) {
+          await playBgm();
+        } else {
+          pauseBgm();
+        }
+      });
+
+      async function primeBgm() {
+        if (bgm.paused) {
+          await playBgm();
+        }
+      }
+
+      window.addEventListener("pointerdown", primeBgm, { once: true });
+      window.addEventListener("keydown", primeBgm, { once: true });
+      setAudioState(false);
 
       function formatClock(date = new Date()) {
         return new Intl.DateTimeFormat("zh-CN", {
