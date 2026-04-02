@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#180d14" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23180d14'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='white' stroke-width='2' opacity='.82'/%3E%3Ccircle cx='32' cy='32' r='3' fill='white'/%3E%3C/svg%3E"
+    />
+    <meta
+      name="description"
+      content="适合手机和 NFC 打开的上海交通大学生日贺卡页面。"
+    />
+    <title>Joyeux Anniversaire</title>
+    <style>
+      :root {
+        --bg-1: #0e0a10;
+        --bg-2: #2d1320;
+        --bg-3: #7a2437;
+        --mist: rgba(255, 247, 240, 0.08);
+        --text: #f8f3ed;
+        --muted: rgba(248, 243, 237, 0.66);
+        --line: rgba(255, 255, 255, 0.16);
+        --accent: #efe5d8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #120b12;
+      }
+
+      body {
+        overflow-x: hidden;
+        color: var(--text);
+        font-family: "Times New Roman", Times, serif;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      body::before {
+        background:
+          radial-gradient(circle at 18% 18%, rgba(231, 173, 146, 0.22), transparent 26%),
+          radial-gradient(circle at 78% 12%, rgba(220, 88, 112, 0.18), transparent 28%),
+          radial-gradient(circle at 52% 68%, rgba(255, 233, 201, 0.09), transparent 30%),
+          linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 48%, var(--bg-3) 100%);
+        z-index: 0;
+      }
+
+      body::after {
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 24px 24px;
+        opacity: 0.15;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0.25));
+        z-index: 0;
+      }
+
+      .fx {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .app {
+        position: relative;
+        z-index: 2;
+        min-height: 100svh;
+        padding:
+          calc(env(safe-area-inset-top, 0px) + 20px)
+          22px
+          calc(env(safe-area-inset-bottom, 0px) + 26px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(248, 243, 237, 0.84);
+      }
+
+      .topline-left {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .topline-left::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.56);
+        flex: 0 0 auto;
+      }
+
+      .topline span:last-child {
+        color: rgba(248, 243, 237, 0.58);
+      }
+
+      .hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        padding: 28px 0 16px;
+      }
+
+      .orbital-mark {
+        position: relative;
+        width: min(70vw, 320px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+      }
+
+      .orbital-mark::before,
+      .orbital-mark::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .orbital-mark::before {
+        inset: 12%;
+        opacity: 0.76;
+      }
+
+      .orbital-mark::after {
+        inset: 24%;
+        opacity: 0.34;
+      }
+
+      .orbital-glow {
+        position: absolute;
+        inset: 20%;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle, rgba(255, 246, 236, 0.28), rgba(255, 246, 236, 0.02) 55%, transparent 72%);
+        filter: blur(10px);
+      }
+
+      .emblem {
+        width: 52%;
+        max-width: 168px;
+        opacity: 0.22;
+        filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.08));
+      }
+
+      .copy {
+        margin-top: -18px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        font-size: 0.8rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(248, 243, 237, 0.62);
+      }
+
+      .title-cn,
+      .sequence-line,
+      .quote,
+      .footer-line {
+        font-family: "STZhongsong", "华文中宋", "Songti SC", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", serif;
+      }
+
+      .title-cn {
+        margin: 0;
+        font-size: clamp(2.35rem, 10vw, 4.6rem);
+        line-height: 1.04;
+        letter-spacing: 0.06em;
+      }
+
+      .title-en {
+        margin: 10px 0 0;
+        font-size: clamp(1rem, 4.6vw, 1.45rem);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(248, 243, 237, 0.78);
+      }
+
+      .quote {
+        margin: 18px auto 0;
+        max-width: 18em;
+        font-size: clamp(1rem, 4.2vw, 1.28rem);
+        line-height: 1.7;
+        color: rgba(248, 243, 237, 0.76);
+      }
+
+      .panel {
+        position: relative;
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+
+      .panel-title {
+        font-size: 0.82rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(248, 243, 237, 0.56);
+      }
+
+      .panel-hint {
+        font-size: 0.78rem;
+        color: rgba(248, 243, 237, 0.52);
+      }
+
+      .sequence {
+        display: grid;
+        gap: 10px;
+      }
+
+      .sequence-line {
+        margin: 0;
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 420ms ease, transform 420ms ease;
+        font-size: clamp(1.08rem, 4.7vw, 1.4rem);
+        line-height: 1.55;
+        color: rgba(248, 243, 237, 0.86);
+      }
+
+      .sequence-line.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .sequence-line.is-final {
+        margin-top: 4px;
+        font-family: "Times New Roman", Times, serif;
+        font-size: clamp(1.32rem, 5vw, 1.86rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .actions {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .primary {
+        appearance: none;
+        border: 0;
+        width: 100%;
+        min-height: 54px;
+        border-radius: 999px;
+        padding: 0 22px;
+        background: rgba(255, 246, 236, 0.92);
+        color: #2b1720;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      }
+
+      .secondary {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        width: 100%;
+        min-height: 48px;
+        border-radius: 999px;
+        padding: 0 18px;
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(248, 243, 237, 0.88);
+        font-size: 0.94rem;
+        letter-spacing: 0.03em;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .tap-note {
+        text-align: center;
+        font-size: 0.8rem;
+        color: rgba(248, 243, 237, 0.48);
+      }
+
+      .footer-line {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 18px;
+        font-size: 0.92rem;
+        color: rgba(248, 243, 237, 0.62);
+      }
+
+      .footer-line strong {
+        display: block;
+        font-weight: 400;
+        color: rgba(248, 243, 237, 0.94);
+      }
+
+      .footer-line small {
+        display: block;
+        margin-top: 3px;
+        color: rgba(248, 243, 237, 0.42);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .status {
+        min-height: 1.2em;
+        text-align: right;
+        font-size: 0.76rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(248, 243, 237, 0.58);
+      }
+
+      @media (min-width: 760px) {
+        .app {
+          max-width: 520px;
+          margin: 0 auto;
+          padding-left: 28px;
+          padding-right: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+
+    <main class="app">
+      <header class="topline">
+        <div class="topline-left">
+          <span>Shanghai Jiao Tong University</span>
+        </div>
+        <span>for Sun Yihao</span>
+      </header>
+
+      <section class="hero">
+        <div class="orbital-mark" aria-hidden="true">
+          <div class="orbital-glow"></div>
+          <img class="emblem" src="./sjtu-emblem-white.svg" alt="" />
+        </div>
+      </section>
+
+      <section class="copy">
+        <p class="eyebrow">04 · 02 · Birthday Letter</p>
+        <h1 class="title-cn">孙一豪<br />生日快乐</h1>
+        <p class="title-en">Joyeux Anniversaire</p>
+        <p class="quote">“那些被删除的时间，都去了哪里。”</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Tap Sequence</span>
+          <span class="panel-hint">每点一次，亮一句</span>
+        </div>
+
+        <div class="sequence" id="sequence">
+          <p class="sequence-line" data-sequence>当你想当之人</p>
+          <p class="sequence-line" data-sequence>做你想做之事</p>
+          <p class="sequence-line" data-sequence>享你应得之荣光</p>
+          <p class="sequence-line is-final" data-sequence>Joyeux Anniversaire</p>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="bloom-button" type="button">点一下，放烟花</button>
+          <button class="secondary" id="share-button" type="button">分享这个页面</button>
+          <div class="tap-note">整张页面都可以轻触，白色烟花会在指尖出现。</div>
+        </div>
+
+        <div class="footer-line">
+          <div>
+            <strong>只有珍惜时间</strong>
+            <small>踔厉奋发之人，才能享有真正的无上荣光</small>
+          </div>
+          <div class="status" id="status">ready</div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const canvas = document.getElementById("fx");
+      const context = canvas.getContext("2d");
+      const bloomButton = document.getElementById("bloom-button");
+      const shareButton = document.getElementById("share-button");
+      const statusNode = document.getElementById("status");
+      const lines = Array.from(document.querySelectorAll("[data-sequence]"));
+
+      const fireworks = [];
+      let stageIndex = 0;
+      let autoBurstUntil = 0;
+      let viewport = { width: 0, height: 0, dpr: 1 };
+
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        viewport = { width, height, dpr };
+      }
+
+      function spawnBurst(x, y, power = 1) {
+        const count = Math.round(26 + power * 18);
+        for (let i = 0; i < count; i += 1) {
+          const angle = (Math.PI * 2 * i) / count + Math.random() * 0.18;
+          const speed = (1.4 + Math.random() * 2.8) * power;
+          fireworks.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 1,
+            size: 1 + Math.random() * 2.4,
+          });
+        }
+      }
+
+      function burstAtCenter(power = 1) {
+        spawnBurst(viewport.width * 0.5, viewport.height * 0.38, power);
+      }
+
+      function revealNextLine() {
+        if (stageIndex >= lines.length) {
+          return false;
+        }
+
+        lines[stageIndex].classList.add("is-visible");
+        stageIndex += 1;
+        statusNode.textContent = stageIndex >= lines.length ? "complete" : "blooming";
+        return true;
+      }
+
+      function runSequence() {
+        const revealed = revealNextLine();
+        burstAtCenter(revealed ? 1.5 : 1.05);
+
+        if (stageIndex >= lines.length) {
+          bloomButton.textContent = "继续点，继续放烟花";
+          autoBurstUntil = performance.now() + 4200;
+        } else if (stageIndex === lines.length - 1) {
+          bloomButton.textContent = "最后一句";
+        } else {
+          bloomButton.textContent = "继续点亮下一句";
+        }
+      }
+
+      function handlePointer(event) {
+        const point =
+          event.touches && event.touches.length
+            ? event.touches[0]
+            : event;
+
+        spawnBurst(point.clientX, point.clientY, 1.05);
+      }
+
+      bloomButton.addEventListener("click", runSequence);
+
+      document.addEventListener(
+        "pointerdown",
+        (event) => {
+          if (event.target === bloomButton || event.target === shareButton) {
+            return;
+          }
+          handlePointer(event);
+        },
+        { passive: true }
+      );
+
+      shareButton.addEventListener("click", async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: "孙一豪生日快乐",
+              text: "打开这张上海交通大学生日贺卡",
+              url: window.location.href,
+            });
+            statusNode.textContent = "shared";
+            return;
+          } catch (error) {
+            if (error && error.name === "AbortError") {
+              statusNode.textContent = "ready";
+              return;
+            }
+          }
+        }
+
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          statusNode.textContent = "link copied";
+        } catch (error) {
+          statusNode.textContent = "copy failed";
+        }
+      });
+
+      function animate(now) {
+        context.clearRect(0, 0, viewport.width, viewport.height);
+
+        if (autoBurstUntil > now) {
+          const pulse = Math.sin(now * 0.012) * 0.5 + 0.5;
+          if (Math.random() < 0.1) {
+            spawnBurst(
+              viewport.width * (0.25 + Math.random() * 0.5),
+              viewport.height * (0.16 + Math.random() * 0.22),
+              0.85 + pulse * 0.45
+            );
+          }
+        }
+
+        for (let i = fireworks.length - 1; i >= 0; i -= 1) {
+          const particle = fireworks[i];
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          particle.vx *= 0.988;
+          particle.vy = particle.vy * 0.988 + 0.012;
+          particle.life -= 0.015;
+
+          if (particle.life <= 0) {
+            fireworks.splice(i, 1);
+            continue;
+          }
+
+          const alpha = Math.max(0, particle.life * 0.9);
+          context.fillStyle = "rgba(255,255,255," + alpha + ")";
+          context.beginPath();
+          context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      resizeCanvas();
+      requestAnimationFrame(animate);
+      window.addEventListener("resize", resizeCanvas);
+      setTimeout(() => {
+        burstAtCenter(1.2);
+      }, 280);
+    </script>
+  </body>
+</html>
